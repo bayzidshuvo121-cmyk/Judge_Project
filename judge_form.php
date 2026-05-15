@@ -17,10 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $msg = "Error: You have already submitted scores for Group #$group_num!";
         $status = "error";
     } else {
-        $s1 = (int)($_POST['dev1'] ?: $_POST['acc1']);
-        $s2 = (int)($_POST['dev2'] ?: $_POST['acc2']);
-        $s3 = (int)($_POST['dev3'] ?: $_POST['acc3']);
-        $s4 = (int)($_POST['dev4'] ?: $_POST['acc4']);
+       // FIXED ✅
+$s1 = (int)(($_POST['dev1'] ?? '') ?: ($_POST['acc1'] ?? 0));
+$s2 = (int)(($_POST['dev2'] ?? '') ?: ($_POST['acc2'] ?? 0));
+$s3 = (int)(($_POST['dev3'] ?? '') ?: ($_POST['acc3'] ?? 0));
+$s4 = (int)(($_POST['dev4'] ?? '') ?: ($_POST['acc4'] ?? 0));
         $total = $s1 + $s2 + $s3 + $s4;
 
         $sql = "INSERT INTO project_scores (judge_id, group_members, group_number, project_title, score1, score2, score3, score4, total_score, comments) 
