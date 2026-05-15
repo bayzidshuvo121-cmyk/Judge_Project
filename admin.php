@@ -3,7 +3,8 @@ include 'db.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') header("Location: login.php");
 
 // Fetch all unique groups that have been graded
-$group_list = $conn->query("SELECT DISTINCT group_number, project_title FROM project_scores ORDER BY group_number ASC");
+// FIXED ✅
+$group_list = $conn->query("SELECT group_number, MIN(project_title) as project_title FROM project_scores GROUP BY group_number ORDER BY group_number ASC");
 
 $selected_group = isset($_GET['group_id']) ? mysqli_real_escape_string($conn, $_GET['group_id']) : null;
 $judges_scores = [];
@@ -17,7 +18,8 @@ if ($selected_group) {
     $judges_scores = $conn->query($query);
     
     // Get summary info for header
-    $info_res = $conn->query("SELECT project_title, group_members, AVG(total_score) as final_avg FROM project_scores WHERE group_number = '$selected_group'");
+   // FIXED ✅
+$info_res = $conn->query("SELECT MIN(project_title) as project_title, MIN(group_members) as group_members, AVG(total_score) as final_avg FROM project_scores WHERE group_number = '$selected_group' GROUP BY group_number");
     $group_info = $info_res->fetch_assoc();
 }
 ?>
